@@ -3,128 +3,174 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#eee3cf">
 <title>My Library</title>
 
 <style>
-* { box-sizing: border-box; }
-
+:root {
+  --bg:#eee4d2;
+  --paper:#faf5e9;
+  --card:#e6d8c0;
+  --ink:#493b2c;
+  --muted:#89775e;
+  --accent:#80603d;
+  --line:#d3c2a5;
+}
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  background: #f1e8d7;
-  color: #493b2d;
-  font-family: Georgia, serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Georgia,serif;
 }
-
 header {
-  padding: 25px 20px;
-  background: #e5d5bb;
+  background:#e2d2b7;
+  padding:22px 18px;
+  position:sticky;
+  top:0;
+  z-index:3;
+  box-shadow:0 2px 8px #5a45221a;
 }
-
-header h1 {
-  margin: 0;
-  font-size: 28px;
+header h1 {margin:0;font-size:27px}
+header p {margin:5px 0 0;color:var(--muted)}
+nav {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:12px;
+  background:#e9dcc6;
 }
-
-header p {
-  margin-bottom: 0;
-  color: #806b51;
+nav button {
+  white-space:nowrap;
 }
-
-main {
-  padding: 18px;
-  max-width: 850px;
-  margin: auto;
-}
-
-input {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #c8b697;
-  border-radius: 12px;
-  background: #faf6ed;
-  font-size: 16px;
-  margin-bottom: 18px;
-}
-
-h2 {
-  font-size: 21px;
-}
-
-.books {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-
-.book {
-  background: #e7dac5;
-  border-radius: 13px;
-  padding: 12px;
-  cursor: pointer;
-}
-
-.cover {
-  height: 145px;
-  border-radius: 8px;
-  background: linear-gradient(140deg,#927653,#493b2d);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff2d9;
-  font-size: 36px;
-}
-
-.book h3 {
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-.book p {
-  font-size: 12px;
-  color: #806b51;
-}
-
 button {
-  border: 0;
-  padding: 12px 16px;
-  border-radius: 10px;
-  background: #70573a;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  background:var(--accent);
+  color:white;
+  font-size:14px;
+  cursor:pointer;
 }
-
+button.secondary {
+  background:#d9c8aa;
+  color:var(--ink);
+}
+main {
+  max-width:900px;
+  margin:auto;
+  padding:17px;
+}
+input,select {
+  width:100%;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:16px;
+  margin:6px 0 14px;
+}
+h2 {font-size:21px}
+.books {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.book {
+  background:var(--card);
+  padding:11px;
+  border-radius:13px;
+  min-width:0;
+}
+.cover {
+  height:145px;
+  border-radius:8px;
+  background:linear-gradient(140deg,#a58a63,#51402d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff3dd;
+  font-size:43px;
+}
+.book h3 {
+  font-size:15px;
+  line-height:1.4;
+  margin:10px 0 5px;
+}
+.book p {
+  color:var(--muted);
+  font-size:12px;
+  min-height:28px;
+}
+.book button {
+  width:100%;
+  margin-top:5px;
+}
+.section {display:none}
+.section.active {display:block}
+.panel {
+  background:var(--paper);
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:15px;
+}
 #reader {
-  display: none;
-  padding: 20px;
-  min-height: 100vh;
-  background: #f8f0df;
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10;
+  background:var(--paper);
+  overflow:auto;
+  color:var(--ink);
 }
-
+.readerbar {
+  position:sticky;
+  top:0;
+  background:#e2d2b7;
+  padding:10px;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.readerbar button {padding:9px}
+#readerTitle {
+  font-weight:bold;
+  flex:1;
+  min-width:100px;
+}
 #readerText {
-  font-size: 21px;
-  line-height: 1.8;
-  white-space: pre-wrap;
+  max-width:740px;
+  margin:25px auto;
+  padding:0 22px 100px;
+  font-size:21px;
+  line-height:1.8;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
-
-.readerButtons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+.readerBottom {
+  position:sticky;
+  bottom:0;
+  padding:12px;
+  background:#e2d2b7;
+  display:flex;
+  gap:12px;
+  align-items:center;
 }
-
+.readerBottom input {margin:0;flex:1}
+small {color:var(--muted)}
+.hidden {display:none!important}
 footer {
-  text-align: center;
-  padding: 25px;
-  color: #927d62;
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
 }
-
 @media(min-width:650px) {
-  .books { grid-template-columns: repeat(4,1fr); }
+  .books {grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -133,210 +179,392 @@ footer {
 
 <header>
   <h1>📚 My Library</h1>
-  <p>Твоя домашняя библиотека</p>
+  <p>Твоя личная электронная библиотека</p>
 </header>
 
-<main id="library">
+<nav>
+  <button onclick="showSection('home')">Главная</button>
+  <button onclick="showSection('catalog')">Детективы</button>
+  <button onclick="showSection('mybooks')">Мои книги</button>
+  <button onclick="showSection('history')">История</button>
+  <button onclick="showSection('settings')">Настройки</button>
+</nav>
 
-  <input id="search"
-    placeholder="Поиск книг и авторов..."
-    oninput="renderBooks()">
+<main>
 
-  <h2>🤎 Продолжить чтение</h2>
-  <div id="continueReading"></div>
+<section id="home" class="section active">
+  <div class="panel">
+    <h2>🤎 Продолжить чтение</h2>
+    <div id="continueReading">Пока нет прочитанных книг.</div>
+  </div>
+  <h2>Недавно открытые</h2>
+  <div class="books" id="recentBooks"></div>
+</section>
 
-  <h2>Дарья Донцова</h2>
-  <div class="books" id="books"></div>
+<section id="catalog" class="section">
+  <h2>🕵️ Бесплатные детективы</h2>
+  <p>Каталог классических произведений из открытых библиотек.</p>
+  <input id="catalogSearch" placeholder="Поиск автора или книги..."
+    oninput="renderCatalog()">
+  <div class="books" id="catalogBooks"></div>
+</section>
 
-  <footer>
-    My Library · Cool Reader Edition
-  </footer>
+<section id="mybooks" class="section">
+  <h2>Моя коллекция</h2>
+  <div class="panel">
+    <p>Добавляй свои TXT и HTML книги.</p>
+    <input type="file" id="fileInput" multiple
+      accept=".txt,.html,.htm,text/plain,text/html">
+  </div>
+  <div class="books" id="myBooks"></div>
+</section>
 
-</main>
+<section id="history" class="section">
+  <h2>История чтения</h2>
+  <div id="historyList"></div>
+  <button class="secondary" onclick="clearHistory()">
+    Очистить историю
+  </button>
+</section>
 
-<section id="reader">
-  <div class="readerButtons">
-    <button onclick="closeBook()">← Назад</button>
+<section id="settings" class="section">
+  <h2>Настройки</h2>
+  <div class="panel">
+    <p>Размер шрифта</p>
     <button onclick="changeFont(-2)">A−</button>
     <button onclick="changeFont(2)">A+</button>
-    <button onclick="bookmark()">☆ Закладка</button>
-    <button onclick="toggleNight()">☾</button>
-  </div>
-
-  <h2 id="bookTitle"></h2>
-  <div id="readerText">
-    Выбери книгу из библиотеки.
+    <p>Тема чтения</p>
+    <button onclick="toggleNight()">Переключить день / ночь</button>
+    <hr>
+    <button onclick="exportBackup()">Сохранить резервную копию</button>
+    <p><small>Данные хранятся локально в Safari.</small></p>
   </div>
 </section>
 
+<footer>My Library · Cool Reader Edition</footer>
+</main>
+
+<div id="reader">
+  <div class="readerbar">
+    <button onclick="closeReader()">←</button>
+    <span id="readerTitle"></span>
+    <button onclick="changeFont(-2)">A−</button>
+    <button onclick="changeFont(2)">A+</button>
+    <button onclick="addBookmark()">☆</button>
+    <button onclick="toggleNight()">☾</button>
+  </div>
+
+  <article id="readerText"></article>
+
+  <div class="readerBottom">
+    <span id="percent">0%</span>
+    <input id="progressSlider" type="range"
+      min="0" max="1000" value="0">
+  </div>
+</div>
+
 <script>
-const books = [
-  {
-    id: 1,
-    title: "Венец безбрачия Белого Кролика",
-    author: "Дарья Донцова",
-    series: "Иронический детектив",
-    description: "Книга из коллекции Дарьи Донцовой."
-  },
-  {
-    id: 2,
-    title: "Бриллиант мутной воды",
-    author: "Дарья Донцова",
-    series: "Иронический детектив",
-    description: "Книга из коллекции Дарьи Донцовой."
-  },
-  {
-    id: 3,
-    title: "Маникюр для покойника",
-    author: "Дарья Донцова",
-    series: "Иронический детектив",
-    description: "Книга из коллекции Дарьи Донцовой."
-  }
+const catalog = [
+{
+ id:"sherlock",
+ title:"Приключения Шерлока Холмса",
+ author:"Артур Конан Дойл",
+ year:"1892",
+ url:"https://www.gutenberg.org/ebooks/bookshelf/30"
+},
+{
+ id:"moonstone",
+ title:"Лунный камень",
+ author:"Уилки Коллинз",
+ year:"1868",
+ url:"https://www.gutenberg.org/ebooks/155"
+},
+{
+ id:"poe",
+ title:"Детективные рассказы",
+ author:"Эдгар Аллан По",
+ year:"1840-е",
+ url:"https://www.gutenberg.org/ebooks/author/100"
+},
+{
+ id:"fatherbrown",
+ title:"Отец Браун",
+ author:"Гилберт Кит Честертон",
+ year:"1911",
+ url:"https://www.gutenberg.org/ebooks/author/80"
+}
 ];
 
-let currentBook = null;
-let fontSize = 21;
-let night = false;
+let current=null;
+let fontSize=21;
+let night=false;
+let timer=null;
 
-function getProgress() {
-  return JSON.parse(
-    localStorage.getItem("myLibraryProgress") || "{}"
-  );
+function get(key, fallback) {
+ try {
+  return JSON.parse(localStorage.getItem(key)) || fallback;
+ } catch(e) { return fallback; }
 }
 
-function renderBooks() {
-  const query = document
-    .getElementById("search").value.toLowerCase();
+function set(key,value) {
+ localStorage.setItem(key,JSON.stringify(value));
+}
 
-  const container = document.getElementById("books");
-  container.innerHTML = "";
+function showSection(id) {
+ document.querySelectorAll(".section").forEach(x=>{
+  x.classList.remove("active");
+ });
+ document.getElementById(id).classList.add("active");
+ if(id==="history") renderHistory();
+ if(id==="home") renderHome();
+}
 
-  books.filter(book =>
-    (book.title + book.author)
-      .toLowerCase().includes(query)
-  ).forEach(book => {
-    const card = document.createElement("div");
-    card.className = "book";
+function renderCatalog() {
+ const q=document.getElementById("catalogSearch")
+   .value.toLowerCase();
+ const root=document.getElementById("catalogBooks");
+ root.innerHTML="";
+ catalog.filter(b=>
+  (b.title+" "+b.author).toLowerCase().includes(q)
+ ).forEach(b=>{
+  const card=document.createElement("div");
+  card.className="book";
+  card.innerHTML=`
+   <div class="cover">📖</div>
+   <h3>${b.title}</h3>
+   <p>${b.author}</p>
+   <small>${b.year}</small>
+   <button>Открыть источник</button>`;
+  card.querySelector("button").onclick=()=>openSource(b.url);
+  root.appendChild(card);
+ });
+}
 
-    card.innerHTML = `
-      <div class="cover">📖</div>
-      <h3>${book.title}</h3>
-      <p>${book.author}</p>
-      <button>Открыть</button>
-    `;
+function openSource(url) {
+ window.open(url,"_blank");
+}
 
-    card.querySelector("button").onclick =
-      () => openBook(book.id);
+function getBooks() {
+ return get("myLibraryBooks",[]);
+}
 
-    container.appendChild(card);
+function renderMyBooks() {
+ const root=document.getElementById("myBooks");
+ root.innerHTML="";
+ getBooks().forEach(b=>{
+  const card=document.createElement("div");
+  card.className="book";
+  card.innerHTML=`
+   <div class="cover">📘</div>
+   <h3>${escapeHTML(b.title)}</h3>
+   <p>${escapeHTML(b.author||"Моя книга")}</p>
+   <button>Читать</button>
+   <button class="secondary">Удалить</button>`;
+  card.querySelector("button").onclick=()=>readBook(b.id);
+  card.querySelectorAll("button")[1].onclick=()=>deleteBook(b.id);
+  root.appendChild(card);
+ });
+}
+
+function escapeHTML(s) {
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+document.getElementById("fileInput").onchange=async e=>{
+ const books=getBooks();
+ for(const f of e.target.files) {
+  const ext=f.name.split(".").pop().toLowerCase();
+  if(!["txt","html","htm"].includes(ext)) continue;
+  const text=await f.text();
+  books.push({
+   id:"local_"+Date.now()+"_"+Math.random(),
+   title:f.name.replace(/\.[^.]+$/,""),
+   author:"Моя коллекция",
+   text:text,
+   added:Date.now()
   });
+ }
+ set("myLibraryBooks",books);
+ renderMyBooks();
+ e.target.value="";
+};
 
-  renderContinue();
+function deleteBook(id) {
+ set("myLibraryBooks",getBooks().filter(b=>b.id!==id));
+ renderMyBooks();
 }
 
-function renderContinue() {
-  const progress = getProgress();
-  const last = books.find(
-    book => progress[book.id]
-  );
+function readBook(id) {
+ const b=getBooks().find(x=>x.id===id);
+ if(!b)return;
+ current=b;
+ document.getElementById("readerTitle").textContent=b.title;
+ const text=document.getElementById("readerText");
+ text.textContent=b.text;
+ text.style.fontSize=fontSize+"px";
+ document.getElementById("reader").style.display="block";
+ document.getElementById("reader").scrollTop=0;
 
-  const el = document.getElementById(
-    "continueReading"
-  );
-
-  el.innerHTML = last
-    ? `<button onclick="openBook(${last.id})">
-         Продолжить: ${last.title}
-       </button>`
-    : "<p>Ты ещё не начинал чтение.</p>";
+ const history=get("myLibraryHistory",{});
+ const p=history[id];
+ if(p && p.position) {
+  setTimeout(()=>{
+   document.getElementById("reader").scrollTop=p.position;
+   updateProgress();
+  },100);
+ }
+ history[id]=history[id]||{};
+ history[id].title=b.title;
+ history[id].last=Date.now();
+ set("myLibraryHistory",history);
 }
 
-function openBook(id) {
-  currentBook = books.find(book => book.id === id);
-
-  document.getElementById("library").style.display =
-    "none";
-
-  document.getElementById("reader").style.display =
-    "block";
-
-  document.getElementById("bookTitle").textContent =
-    currentBook.title;
-
-  const progress = getProgress();
-
-  document.getElementById("readerText").textContent =
-    currentBook.description +
-    "\n\nДля чтения добавь собственный файл книги через функцию импорта, которую подключим следующим этапом.";
-
-  window.scrollTo(0, 0);
+function savePosition() {
+ if(!current)return;
+ const el=document.getElementById("reader");
+ const max=el.scrollHeight-el.clientHeight;
+ const history=get("myLibraryHistory",{});
+ history[current.id]={
+  title:current.title,
+  position:el.scrollTop,
+  progress:max>0?el.scrollTop/max:0,
+  last:Date.now()
+ };
+ set("myLibraryHistory",history);
+ updateProgress();
 }
 
-function closeBook() {
-  document.getElementById("reader").style.display =
-    "none";
-
-  document.getElementById("library").style.display =
-    "block";
-
-  renderBooks();
+function updateProgress() {
+ const el=document.getElementById("reader");
+ const max=el.scrollHeight-el.clientHeight;
+ const p=max>0?el.scrollTop/max:0;
+ document.getElementById("progressSlider").value=p*1000;
+ document.getElementById("percent").textContent=
+  Math.round(p*100)+"%";
+ clearTimeout(timer);
+ timer=setTimeout(savePosition,250);
 }
 
-function saveProgress() {
-  if (!currentBook) return;
+document.getElementById("reader").addEventListener(
+ "scroll",updateProgress,{passive:true}
+);
 
-  const progress = getProgress();
+document.getElementById("progressSlider").oninput=e=>{
+ const el=document.getElementById("reader");
+ el.scrollTop=(el.scrollHeight-el.clientHeight)*
+  (e.target.value/1000);
+};
 
-  progress[currentBook.id] = {
-    scroll: window.scrollY,
-    date: Date.now()
-  };
-
-  localStorage.setItem(
-    "myLibraryProgress",
-    JSON.stringify(progress)
-  );
+function closeReader() {
+ savePosition();
+ document.getElementById("reader").style.display="none";
+ current=null;
 }
 
-function bookmark() {
-  if (!currentBook) return;
-
-  const marks = JSON.parse(
-    localStorage.getItem("myLibraryMarks") || "{}"
-  );
-
-  marks[currentBook.id] = Date.now();
-
-  localStorage.setItem(
-    "myLibraryMarks",
-    JSON.stringify(marks)
-  );
-
-  alert("Закладка сохранена!");
-}
-
-function changeFont(value) {
-  fontSize += value;
-
-  document.getElementById(
-    "readerText"
-  ).style.fontSize = fontSize + "px";
+function changeFont(v) {
+ fontSize=Math.max(14,Math.min(36,fontSize+v));
+ document.getElementById("readerText").style.fontSize=
+  fontSize+"px";
+ set("myLibraryFont",fontSize);
 }
 
 function toggleNight() {
-  night = !night;
-
-  document.getElementById("reader").style.background =
-    night ? "#242321" : "#f8f0df";
-
-  document.getElementById("reader").style.color =
-    night ? "#eee5d5" : "#493b2d";
+ night=!night;
+ const r=document.getElementById("reader");
+ r.style.background=night?"#242321":"var(--paper)";
+ r.style.color=night?"#eee5d5":"var(--ink)";
+ document.getElementById("readerText").style.color=
+  night?"#eee5d5":"var(--ink)";
 }
 
-window.addEventListener("beforeunload", saveProgress);
+function addBookmark() {
+ if(!current)return;
+ const marks=get("myLibraryMarks",{});
+ marks[current.id]={
+  title:current.title,
+  position:document.getElementById("reader").scrollTop,
+  date:Date.now()
+ };
+ set("myLibraryMarks",marks);
+ alert("Закладка сохранена!");
+}
 
-renderBooks();
+function renderHistory() {
+ const root=document.getElementById("historyList");
+ const h=get("myLibraryHistory",{});
+ root.innerHTML="";
+ Object.keys(h).sort((a,b)=>h[b].last-h[a].last)
+ .forEach(id=>{
+  const p=h[id];
+  const el=document.createElement("div");
+  el.className="panel";
+  el.innerHTML=`
+   <b>${escapeHTML(p.title)}</b>
+   <p>${Math.round((p.progress||0)*100)}% прочитано</p>
+   <small>${new Date(p.last).toLocaleString()}</small>`;
+  root.appendChild(el);
+ });
+}
+
+function clearHistory() {
+ if(confirm("Очистить историю чтения?")) {
+  set("myLibraryHistory",{});
+  renderHistory();
+ }
+}
+
+function renderHome() {
+ const h=get("myLibraryHistory",{});
+ const root=document.getElementById("recentBooks");
+ root.innerHTML="";
+ const items=Object.keys(h)
+  .sort((a,b)=>h[b].last-h[a].last).slice(0,4);
+ if(items.length===0) {
+  root.innerHTML="<p>Здесь появятся последние книги.</p>";
+ }
+ items.forEach(id=>{
+  const b=getBooks().find(x=>x.id===id);
+  if(!b)return;
+  const btn=document.createElement("button");
+  btn.textContent=b.title;
+  btn.onclick=()=>readBook(id);
+  root.appendChild(btn);
+ });
+ const last=items[0];
+ const cont=document.getElementById("continueReading");
+ const b=getBooks().find(x=>x.id===last);
+ cont.innerHTML="";
+ if(b) {
+  const btn=document.createElement("button");
+  btn.textContent="Продолжить: "+b.title;
+  btn.onclick=()=>readBook(b.id);
+  cont.appendChild(btn);
+ } else cont.textContent="Добавь свою первую книгу.";
+}
+
+function exportBackup() {
+ const data={
+  books:getBooks(),
+  history:get("myLibraryHistory",{}),
+  marks:get("myLibraryMarks",{})
+ };
+ const blob=new Blob([JSON.stringify(data)],{
+  type:"application/json"
+ });
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="my-library-backup.json";
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+
+fontSize=get("myLibraryFont",21);
+renderCatalog();
+renderMyBooks();
+renderHome();
 </script>
-
 </body>
 </html>
