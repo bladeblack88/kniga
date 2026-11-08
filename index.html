@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>My Library</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f1e8d7;
+  color: #493b2d;
+  font-family: Georgia, serif;
+}
+
+header {
+  padding: 25px 20px;
+  background: #e5d5bb;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin-bottom: 0;
+  color: #806b51;
+}
+
+main {
+  padding: 18px;
+  max-width: 850px;
+  margin: auto;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #c8b697;
+  border-radius: 12px;
+  background: #faf6ed;
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+.books {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.book {
+  background: #e7dac5;
+  border-radius: 13px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.cover {
+  height: 145px;
+  border-radius: 8px;
+  background: linear-gradient(140deg,#927653,#493b2d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff2d9;
+  font-size: 36px;
+}
+
+.book h3 {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.book p {
+  font-size: 12px;
+  color: #806b51;
+}
+
+button {
+  border: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #70573a;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+#reader {
+  display: none;
+  padding: 20px;
+  min-height: 100vh;
+  background: #f8f0df;
+}
+
+#readerText {
+  font-size: 21px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.readerButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #927d62;
+}
+
+@media(min-width:650px) {
+  .books { grid-template-columns: repeat(4,1fr); }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📚 My Library</h1>
+  <p>Твоя домашняя библиотека</p>
+</header>
+
+<main id="library">
+
+  <input id="search"
+    placeholder="Поиск книг и авторов..."
+    oninput="renderBooks()">
+
+  <h2>🤎 Продолжить чтение</h2>
+  <div id="continueReading"></div>
+
+  <h2>Дарья Донцова</h2>
+  <div class="books" id="books"></div>
+
+  <footer>
+    My Library · Cool Reader Edition
+  </footer>
+
+</main>
+
+<section id="reader">
+  <div class="readerButtons">
+    <button onclick="closeBook()">← Назад</button>
+    <button onclick="changeFont(-2)">A−</button>
+    <button onclick="changeFont(2)">A+</button>
+    <button onclick="bookmark()">☆ Закладка</button>
+    <button onclick="toggleNight()">☾</button>
+  </div>
+
+  <h2 id="bookTitle"></h2>
+  <div id="readerText">
+    Выбери книгу из библиотеки.
+  </div>
+</section>
+
+<script>
+const books = [
+  {
+    id: 1,
+    title: "Венец безбрачия Белого Кролика",
+    author: "Дарья Донцова",
+    series: "Иронический детектив",
+    description: "Книга из коллекции Дарьи Донцовой."
+  },
+  {
+    id: 2,
+    title: "Бриллиант мутной воды",
+    author: "Дарья Донцова",
+    series: "Иронический детектив",
+    description: "Книга из коллекции Дарьи Донцовой."
+  },
+  {
+    id: 3,
+    title: "Маникюр для покойника",
+    author: "Дарья Донцова",
+    series: "Иронический детектив",
+    description: "Книга из коллекции Дарьи Донцовой."
+  }
+];
+
+let currentBook = null;
+let fontSize = 21;
+let night = false;
+
+function getProgress() {
+  return JSON.parse(
+    localStorage.getItem("myLibraryProgress") || "{}"
+  );
+}
+
+function renderBooks() {
+  const query = document
+    .getElementById("search").value.toLowerCase();
+
+  const container = document.getElementById("books");
+  container.innerHTML = "";
+
+  books.filter(book =>
+    (book.title + book.author)
+      .toLowerCase().includes(query)
+  ).forEach(book => {
+    const card = document.createElement("div");
+    card.className = "book";
+
+    card.innerHTML = `
+      <div class="cover">📖</div>
+      <h3>${book.title}</h3>
+      <p>${book.author}</p>
+      <button>Открыть</button>
+    `;
+
+    card.querySelector("button").onclick =
+      () => openBook(book.id);
+
+    container.appendChild(card);
+  });
+
+  renderContinue();
+}
+
+function renderContinue() {
+  const progress = getProgress();
+  const last = books.find(
+    book => progress[book.id]
+  );
+
+  const el = document.getElementById(
+    "continueReading"
+  );
+
+  el.innerHTML = last
+    ? `<button onclick="openBook(${last.id})">
+         Продолжить: ${last.title}
+       </button>`
+    : "<p>Ты ещё не начинал чтение.</p>";
+}
+
+function openBook(id) {
+  currentBook = books.find(book => book.id === id);
+
+  document.getElementById("library").style.display =
+    "none";
+
+  document.getElementById("reader").style.display =
+    "block";
+
+  document.getElementById("bookTitle").textContent =
+    currentBook.title;
+
+  const progress = getProgress();
+
+  document.getElementById("readerText").textContent =
+    currentBook.description +
+    "\n\nДля чтения добавь собственный файл книги через функцию импорта, которую подключим следующим этапом.";
+
+  window.scrollTo(0, 0);
+}
+
+function closeBook() {
+  document.getElementById("reader").style.display =
+    "none";
+
+  document.getElementById("library").style.display =
+    "block";
+
+  renderBooks();
+}
+
+function saveProgress() {
+  if (!currentBook) return;
+
+  const progress = getProgress();
+
+  progress[currentBook.id] = {
+    scroll: window.scrollY,
+    date: Date.now()
+  };
+
+  localStorage.setItem(
+    "myLibraryProgress",
+    JSON.stringify(progress)
+  );
+}
+
+function bookmark() {
+  if (!currentBook) return;
+
+  const marks = JSON.parse(
+    localStorage.getItem("myLibraryMarks") || "{}"
+  );
+
+  marks[currentBook.id] = Date.now();
+
+  localStorage.setItem(
+    "myLibraryMarks",
+    JSON.stringify(marks)
+  );
+
+  alert("Закладка сохранена!");
+}
+
+function changeFont(value) {
+  fontSize += value;
+
+  document.getElementById(
+    "readerText"
+  ).style.fontSize = fontSize + "px";
+}
+
+function toggleNight() {
+  night = !night;
+
+  document.getElementById("reader").style.background =
+    night ? "#242321" : "#f8f0df";
+
+  document.getElementById("reader").style.color =
+    night ? "#eee5d5" : "#493b2d";
+}
+
+window.addEventListener("beforeunload", saveProgress);
+
+renderBooks();
+</script>
+
+</body>
+</html>
